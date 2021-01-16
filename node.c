@@ -12,7 +12,7 @@ node* newNode() {
 	if (n == NULL)
 		printf("Memory allocation failed!");
 
-	n -> count = 0; //Set the count field of n.
+	n -> word_count = 0; //Set the count field of n.
 
 	int i = 0;
 	while (i < ABC) { // Set all children of node as NULL's
@@ -31,30 +31,28 @@ void toLowerCase(char str []){
 	}
 }
 
-void addword(node* head,char* word) {
+void addWord(node* head,char* word) {
 	toLowerCase(word);
 	removeSpecialChars(word);
 	node* temp = head;
 	int i = 0;
 	while (i<strlen(word)) {
 
-		if (temp->children[*(word + i) - 97] == NULL) {
+		if (temp->children[*(word + i) - 97] == NULL) { // Ascii table
 			temp->children[*(word + i) - 97] = newNode();
 			temp = temp->children[*(word + i) - 97];
 			temp->letter = *(word + i);
 			
 			i++;
-
 			
 		}
 		else{
 			temp = temp->children[*(word + i) - 97];
 			i++;
 		}
-
 	}
 	
-	temp->count++;
+	temp->word_count++;
 	temp->is_word = TRUE;
 }
 
@@ -78,84 +76,79 @@ void removeSpecialChars(char* s)
 	s[write] = '\0';
 }
 void free_node(node* n) {
-	
-	if (n == NULL) {
-		return;
-	}
-	else {
+	if(n!=NULL){
 		// Remove all allocated memory for n's 
 		// Children (26) Recursively.
 		for (int i = 1; i < ABC; i++) {
 			free_node((n -> children)[i]);
 		}
 	}
-	
+	else
+		return;
 	free(n);
-	// return;
 }
-void print_word(node* head,char* c) {
-	
+
+// This method print words from the tree 
+// in an alpha-betical order.
+// From the head node of the tree, print all words from 'a' to 'z'.
+void print_words(node* head,char* c) {
+
 	for (int i = 0; i < ABC; i++) {
 		if (head->children[i] != NULL) {
-			int level=1;
-			print_word2(head->children[i],c,level);
+			print_word(head->children[i],c,0);
 		}
 
 	}
 
 }
-void print_word2(node* node, char* c,int level) {
-	if (level <= strlen(c))
-		c[level-1] = '\0';
+
+// This method traveles the tree and prints a word every time 
+// We reach a node that it's 'is_word' field is true.
+void print_word(node* node, char* c,int level) {
+	if (level < strlen(c))
+		c[level] = '\0';
 	strncat(c, &node->letter, 1);
 	if (node->is_word == TRUE) {
-		printf("%s\t%ld\n", c, node->count);
-		
+		printf("%s\t%ld\n", c, node->word_count); // Print the word and his counter
 	}
 	
 	for (int i = 0; i < ABC; i++) {
 		
 		if (node->children[i] != NULL) {
-		print_word2(node->children[i], c,level+1);
-
+			print_word(node->children[i], c,level+1);
 		}
-		
-
-	}
-	
-
+	}	
 }
 
-
-void print_word_rev(node* head, char* c) {
+// This method prints words from the tree 
+// in an opposite alpha-betical order.
+// From the head node of the tree, print all words from 'z' to 'a'.
+void print_words_rev(node* head, char* c) {
 
 	for (int i = ABC-1; i >= 0; i--) {
 		if (head->children[i] != NULL) {
-			int level = 1;
-			print_word_rev2(head->children[i], c, level);
+			print_rev(head->children[i], c, 0);
 		}
-
 	}
-
 }
-void print_word_rev2(node* node, char* c, int level) {
-	if (level <= strlen(c)) {
-		c[level - 1] = '\0';
+// This method traveles the tree in the opposite direction 
+// and prints a word every time we reach a node that
+// it's 'is_word' field is true.
+void print_rev(node* node, char* c, int level) {
+	if (level < strlen(c)) {
+		c[level] = '\0';
 	}
-	strncat(c, &node->letter, 1);
-	if (node->is_word == TRUE) {
-		printf("%s\t%ld\n", c, node->count);
-
+	strncat(c, &node->letter, 1);// Append a char to c.
+	if (node->is_word == TRUE) { // If reached a node that has 
+		// it's 'is_word' field TRUE - Print the word and its counter.
+		printf("%s\t%ld\n", c, node->word_count);
 	}
-
+	
+	// Traverse in the opposite direction.
 	for (int i = ABC-1; i>=0; i--) {
-
 		if (node->children[i] != NULL) {
-			print_word_rev2(node->children[i], c, level + 1);
-
+			print_rev(node->children[i], c, level + 1);
 		}
-
-
 	}
 
 }
