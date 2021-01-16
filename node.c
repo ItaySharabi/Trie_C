@@ -109,7 +109,7 @@ void print_word(node* node, char* c,int level) {
 		c[level] = '\0';
 	strncat(c, &node->letter, 1);
 	if (node->is_word == TRUE) {
-		printf("%s\t%ld\n", c, node->word_count); // Print the word and his counter
+		printf("%s %ld\n", c, node->word_count); // Print the word and his counter
 	}
 	
 	for (int i = 0; i < ABC; i++) {
@@ -141,7 +141,7 @@ void print_rev(node* node, char* c, int level) {
 	strncat(c, &node->letter, 1);// Append a char to c.
 	if (node->is_word == TRUE) { // If reached a node that has 
 		// it's 'is_word' field TRUE - Print the word and its counter.
-		printf("%s\t%ld\n", c, node->word_count);
+		printf("%s %ld\n", c, node->word_count);
 	}
 	
 	// Traverse in the opposite direction.
