@@ -1,10 +1,7 @@
-#include<stdio.h>
-#include<string.h>
-#include<ctype.h>
-#include"node.h"
-
-
-
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include "node.h"
 
 
 int main(int argc, char* argv[]) {
